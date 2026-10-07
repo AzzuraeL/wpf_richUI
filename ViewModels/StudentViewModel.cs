@@ -76,35 +76,56 @@ public class StudentViewModel : INotifyPropertyChanged
 
     private void Save()
     {
-        if (SelectedStudent == null) return;
-        if (SelectedStudent.Id == 0)
-            _repository.Insert(SelectedStudent);
-        else
-            _repository.Update(SelectedStudent);
-        
-        LoadData();
-        Reset();
+        try
+        {
+            if (SelectedStudent == null) return;
+            if (SelectedStudent.Id == 0)
+                _repository.Insert(SelectedStudent);
+            else
+                _repository.Update(SelectedStudent);
+            
+            LoadData();
+            Reset();
+        }
+        catch (System.Exception ex)
+        {
+            System.Windows.MessageBox.Show("Gagal menyimpan data: " + ex.Message, "Error", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
+        }
     }
 
     private void Delete()
     {
-        if (SelectedStudent == null) return;
-        _repository.Delete(SelectedStudent.Id);
-        LoadData();
-        Reset();
+        try
+        {
+            if (SelectedStudent == null) return;
+            _repository.Delete(SelectedStudent.Id);
+            LoadData();
+            Reset();
+        }
+        catch (System.Exception ex)
+        {
+            System.Windows.MessageBox.Show("Gagal menghapus data: " + ex.Message, "Error", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
+        }
     }
 
     private void Search()
     {
-        var result = string.IsNullOrWhiteSpace(SearchText) 
-            ? _repository.GetAll() 
-            : _repository.Search(SearchText);
-            
-        Students.Clear();
-        foreach (var student in result)
-            Students.Add(student);
-            
-        RefreshStatistics();
+        try
+        {
+            var result = string.IsNullOrWhiteSpace(SearchText) 
+                ? _repository.GetAll() 
+                : _repository.Search(SearchText);
+                
+            Students.Clear();
+            foreach (var student in result)
+                Students.Add(student);
+                
+            RefreshStatistics();
+        }
+        catch (System.Exception ex)
+        {
+            System.Windows.MessageBox.Show("Gagal mencari data: " + ex.Message, "Error", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
+        }
     }
 
     private void Reset()
